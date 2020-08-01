@@ -24,20 +24,22 @@ setup(name='itsie',
       #     'install': new_install,
       #     },
       package_data={
-          "itsie": ["data/*.txt"],
+          "itsie": ["data/*.txt", "data/*.bloom"],
           },
       entry_points={
           "console_scripts": [
               "itsie = itsie.main:main",
               ]
           },
-      install_requires=[
-          'pybloomfiltermmap3',
-          'tldextract',
-          'lxml',
-          'bs4',
-          'mysql-connector-python',
-          ],
+      # install_requires=[
+      #     'matplotlib',
+      #     'numpy',
+      #     'ruamel.yaml',
+      #     'doi2bib',
+      #     'pandas',
+      #     'pyyaml',
+      #     'configurator',
+      #     ],
       include_package_data=True,
       zip_safe=False)
 

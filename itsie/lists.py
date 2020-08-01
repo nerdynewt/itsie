@@ -34,6 +34,7 @@ class List:
 
 
 def trim(todo):
+    print("Trimming...")
     """
     Removes already seen urls and excluded urls from given list
     """
@@ -48,7 +49,7 @@ def cleanup():
     """
     print("Writing lists back to disk...")
     todo.write()
-    found.write()
+    # found.write()
     seen.write()
     sinners.write()
     corporates.write()

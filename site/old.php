@@ -45,7 +45,7 @@ if ($conn->connect_error) {
 }
 $queries = array();
 parse_str($_SERVER['QUERY_STRING'], $queries);
-$sql = "SELECT url,title,body, MATCH (url,title,body) AGAINST ('$queries[q]' IN NATURAL LANGUAGE MODE) AS score FROM pycrawl_index WHERE MATCH (url,title,body) AGAINST ('$queries[q]' IN NATURAL LANGUAGE MODE LIMIT 30);";
+$sql = "SELECT url,title,body, MATCH (url,title,body) AGAINST ('$queries[q]' IN NATURAL LANGUAGE MODE) AS score FROM itsie_index WHERE MATCH (url,title,body) AGAINST ('$queries[q]' IN NATURAL LANGUAGE MODE) LIMIT 30;";
 $exp= "[^.]* $queries[q] [^.]*\.";
 $result = $conn->query($sql);
 echo '<h3>Search Results for: '.$queries['q'].'</h3>';

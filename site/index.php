@@ -9,19 +9,12 @@
     </head>
 <body>
 
-<h1>Search</h1>
-
-<form action="#" method="post">
-<input type="text" name="name" placeholder="Search...">
-<input type="submit" name="submit">
-</form>
 
 
 </body>
 </html>
 
 <?php
-
 function print_result($title, $url, $snippet){
 echo '<li class="results"><div class="caption"><h2><a href="'.$url.'">'.$title.'</a></h2><div class="attribution"><cite>'.$url.'</cite></div><div class="snippet"><p>'.$snippet.'</div></div></li>';
 }
@@ -31,11 +24,19 @@ if(isset($_POST['submit'])){
 $name = $_POST['name'];
 header("Location:http://localhost:8000/index.php?q=".$_POST['name']);
 }
-else{
+$queries = array();
+parse_str($_SERVER['QUERY_STRING'], $queries);
+$query = $queries[q];
+if(isset($query)){
 $servername = "localhost";
 $username = "vishnu";
 $password = "CrapWeasel";
 $dbname = "search_index";
+echo '<center><div style="max-width: 70%" class="center" align="center"><img src="logo.png" align="middle"></div>';
+echo'<form action="#" method="post">
+<input type="text" name="name" placeholder="Search...">
+<input type="submit" name="submit">
+</form></center>';
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -45,7 +46,7 @@ if ($conn->connect_error) {
 }
 $queries = array();
 parse_str($_SERVER['QUERY_STRING'], $queries);
-$sql = "SELECT url,title,body, MATCH (url,title,body) AGAINST ('$queries[q]' IN NATURAL LANGUAGE MODE) AS score FROM pycrawl_index WHERE MATCH (url,title,body) AGAINST ('$queries[q]' IN NATURAL LANGUAGE MODE LIMIT 30);";
+$sql = "SELECT url,title,body, MATCH (url,title,body) AGAINST ('$queries[q]' IN NATURAL LANGUAGE MODE) AS score FROM itsie_index WHERE MATCH (url,title,body) AGAINST ('$queries[q]' IN NATURAL LANGUAGE MODE) LIMIT 30;";
 $exp= "[^.]* $queries[q] [^.]*\.";
 $result = $conn->query($sql);
 echo '<h3>Search Results for: '.$queries['q'].'</h3>';
@@ -70,4 +71,13 @@ print_result($row["title"], $row["url"], array_pop(array_reverse($matches)));
 }
 $conn->close();
 }
+else{
+echo '<center><div style="max-width: 70%" class="center" align="center"><img src="logo.png" align="middle"></div>';
+echo'<form action="#" method="post">
+<input type="text" name="name" placeholder="Search...">
+<input type="submit" name="submit">
+</form></center>';
+}
+
+
 ?>

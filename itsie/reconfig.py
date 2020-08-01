@@ -8,7 +8,7 @@ import shutil
 def init():
     print("Initializing directory for crawl...")
     wd = os.getcwd()
-    listfiles = ["domains.txt", "corporates.txt", "sinners.txt", "exclude.txt", "seen.txt", "todo.txt", "found.txt"]
+    listfiles = ["domains.txt", "corporates.txt", "sinners.txt", "exclude.txt", "seen.txt", "todo.txt", "found.txt", "million.bloom"]
     for listfile in listfiles:
         # print(pkg_resources.resource_exists("itsie", "data/todo.txt"))
         shutil.copy(pkg_resources.resource_filename("itsie", "data/"+listfile), wd)

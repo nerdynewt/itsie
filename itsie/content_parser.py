@@ -27,9 +27,9 @@ class Content:
             self.title = url
         self.clean = soup.get_text()
         self.links = re.findall(r'href="(http.*?)"', content, re.IGNORECASE)
-        with open('found.txt', 'a') as f:
-            for item in self.links:
-                f.write("%s\n" % item)
+        # with open('found.txt', 'a') as f:
+        #     for item in self.links:
+        #         f.write("%s\n" % item)
 
 def cdn_checker(header, domain):
     """
@@ -63,6 +63,7 @@ def corporate(text, domain):
     """
     detects corporate landing websites
     """
+    newsspeak = [ 'hello' ]
     newsspeak = ['Our Products', 'Terms of Use', 'Help Center', 'About Us', 'Privacy Policy','Privacy policy', 'Code of Conduct', 'Cookie Policy', 'Privacy Agreement', 'Terms of Agreement', 'Terms &amp; Conditions', 'Terms of Service', 'Terms of service' 'Contact Us', 'Terms of Use and Disclaimer', 'Press Centre', 'PRIVACY POLICY', 'Diversity', 'Terms of use', 'Privacy statement', 'Cookie policy', 'About us', 'Press releases', 'Cookie Settings', 'Contact us', 'Careers', 'Privacy', 'Leadership', 'Terms']
     for word in newsspeak:
         if '>'+word+'<' in text or '> '+word+' <' in text:
