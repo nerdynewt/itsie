@@ -2,68 +2,86 @@ The internet today has become such a commercial place. You have corporate landin
 
 Itsie tries to crawl the web while categorically avioding such commercial pages. Along with an explicit blacklist, itsie also has the ability to recognize and block new commercial sites it comes across, whether it be another listicle site or a random bank's landing page. It also comes with a convenient PHP web front-end that can be easily served, and which acts like any other search engine.
 
+![screenshot](screenshot.png)
+
 ## Installation and Usage
 
-### Setting up MySQL
+### Quick Start
+
+Clone the repository and install using `pip`:
+
+```bash
+git clone "https://github.com/nerdynewt/itsie" && pip install -e itsie
+```
+
+Now make a folder to store all your crawl data, and initialize it. (Or just use the `example` directory)
+
+```bash
+mkdir mycrawl
+itsie --init
+```
+
+Now you can put a list of starting urls into `todo.txt`, one per line:
+```bash
+echo "https://www.splitbrain.org" >> todo.txt
+```
+
+If you feel like you have very few urls to start with, use the `--collect` flag first, which will give you a lot more urls into `todo.txt` without touching the database. This may be needed if your starting urls are detected to be too mainstream and are skipped/blocked outright.
+
+```bash
+itsie --collect --depth 2
+```
+
+Now you can run `itsie`, specifying the depth to crawl to. The depth defaults to 3. This will add all the indexed results into `itsie.db`. You can safely terminate the process any time by supplying a `KeyboardInterrupt`. This writes back the remaining urls and the ones found to disk, before exiting.
+
+```bash
+itsie --depth 2
+```
+
+To use the web PHP frontend, make sure that PHP is installed, along with its sqlite plugin. You might also have to enable sqlite for php. On the crawl directory you chose, you'll find an `index.php` file, which is the interface. Start a development PHP server using:
+
+```bash
+php -S 0.0.0.0:8000
+```
+
+No navigate to <http://localhost:8000> on your browser, and start searching!
+
+### Production
+
+Although the above method works for your usage, if you are planning to host Itsie for public use, follow these additional steps. Basic knowledge in `MySQL` and web hosting are assumed.
 
 - [Install MySQL](https://dev.mysql.com/doc/mysql-installation-excerpt/5.7/en/) for your distribution/OS
 - Make sure it is installed: `mysql --version`
 - Enable/start the MySQL Server. Usually `systemctl start mariadb` or `systemctl start mysql`
 - Log in to MySQL as root: `sudo mysql -u root -p`. Press enter when prompted for password
-- Make a new user, create a database, and give the new user rights to the database. **Important:** Use the _exact_ same credentials. Copy-paste.
+- Make a new user, create a database, and give the new user rights to the database. Change `username`, `PaSSwoRd` and `search_index` as needed.
 ```mysql
-CREATE USER 'pycrawl'@'localhost' IDENTIFIED BY 'PaSSwoRd';
+CREATE USER 'username'@'localhost' IDENTIFIED BY 'PaSSwoRd';
 CREATE DATABASE search_index;
-GRANT ALL PRIVILEGES ON search_index.* TO 'pycrawl'@'localhost';
+GRANT ALL PRIVILEGES ON search_index.* TO 'username'@'localhost';
 FLUSH PRIVILEGES;
 quit
 ```
-- Now login as the new user: `mysql -u pycrawl -p`. Type in `PaSSwoRd` when prompted for password.
-- Create a table in the new database to add indexed results:
-```mysql
-USE search_index;
-CREATE TABLE search_index (url VARCHAR(255), title VARCHAR(255), content LONGTEXT);
+
+Now make a configuration file for `itsie` at either `~/.itsie/config.yaml` or `~/.config/itsie/config.yaml`, and add the following configuration options according to the credentials you just entered into `mysql`:
+
+```yaml
+mysql: True
+
+sql:
+	user: username
+	password: PaSSwoRd
+	database: search_index
 ```
 
-### Using the Crawler
-
-
-Clone and `cd`:
-```bash
-git clone "https://github.com/nerdynewt/crawler" && cd crawler/pycrawl
-```
-
-Put the urls you need to crawl in `todo.txt`. ex:
-```bash
-echo "https://www.splitbrain.org" >> todo.txt
-```
-
-Run the crawler script:
-
-```bash
-python newmain.py
-```
-
-### Using the web frontend
-
-- Install `php`
-- [Set up](https://wiki.archlinux.org/index.php/PHP#MySQL/MariaDB) `php` to be used with MySQL
-- From the project root folder, start a development `php` server: `php -S 0.0.0.0:8000`
-
-Now, if your query is _Richard Stallman_, navigate to:
-
-<http://localhost:8000/query.php?q=richard%20stallman>
-
-Yeah, I'm lazy.
-
-
-## Philosophy
-
-Google searches aren't too helpful if you're looking for a random person's opinions or random rants on personal blogs. Most of the time, all you get is the opinion of a 'journalist' (whose _very_ job is to have opinions) or a spammy WordPress "blog" site full of affiliate links. This crawler/search-engine aims to completely ignore the kind of websites you get on google search results and tries to index genuine personal web logs.
+Copy the `site` folder to the web root of a server of your choice. Make sure that:
+- The server is set to work with `php` (ex. for `nginx`)
+- `php` is [set up](https://wiki.archlinux.org/index.php/PHP#MySQL/MariaDB) to work with `MySQL`
+- SSL, reverse-proxy etc. are set up
 
 ## Features
 
-As I said, this is a highly opinionated script, and makes broad sweeping generalizations and assumptions on the present state of the internet and the needs of the user. So these aren't bugs, these are features:
+Itsie makes broad sweeping generalizations and assumptions on the present state of the internet and the needs of the user. So these aren't bugs, these are features:
 
 ### Blocklists
 

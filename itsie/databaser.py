@@ -30,11 +30,13 @@ class Database:
             self.database = args[0]
             self.connection = sqlite3.connect(self.database)
             self.cursor = self.connection.cursor()
-            self.cursor.execute("""CREATE TABLE IF NOT EXISTS itsie_index(
-                url VARCHAR(200),
-                title VARCHAR(200),
-                body TEXT
-                );""")
+            self.cursor.execute("""CREATE VIRTUAL TABLE IF NOT EXISTS itsie_index USING FTS5(url,title,body);""")
+
+            # self.cursor.execute("""CREATE TABLE IF NOT EXISTS itsie_index(
+            #     url VARCHAR(200),
+            #     title VARCHAR(200),
+            #     body TEXT
+            #     );""")
 
     def add(self, url, title, content):
         if not url or not title or not content:

@@ -24,7 +24,7 @@ setup(name='itsie',
       #     'install': new_install,
       #     },
       package_data={
-          "itsie": ["data/*.txt", "data/*.bloom"],
+          "itsie": ["data/*.txt", "data/*.bloom", "data/*.php"],
           },
       entry_points={
           "console_scripts": [
