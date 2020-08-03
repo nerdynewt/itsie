@@ -38,7 +38,7 @@ Now you can run `itsie`, specifying the depth to crawl to. The depth defaults to
 itsie --depth 2
 ```
 
-To use the web PHP frontend, make sure that PHP is installed, along with its sqlite plugin. You might also have to enable sqlite for php. On the crawl directory you chose, you'll find an `index.php` file, which is the interface. Start a development PHP server using:
+To use the web PHP frontend, make sure that PHP is installed, along with its sqlite plugin. You might also have to [enable](https://wiki.archlinux.org/index.php/PHP#Sqlite) sqlite for php. On the crawl directory you chose, you'll find an `index.php` file, which is the interface. Start a development PHP server using:
 
 ```bash
 php -S 0.0.0.0:8000
